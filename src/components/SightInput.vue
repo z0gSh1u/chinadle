@@ -1,46 +1,74 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { ChinaSights } from '../map/sights'
+import { ChinaSights, Sight } from '../materials/sights'
 import confetti from 'canvas-confetti'
+import { CompassToArrow, createGuess, Guess } from '../materials/utils'
+import * as geolib from 'geolib'
 
 let myConfetti: any
 
 export default defineComponent({
   data() {
-    return {}
+    return { currentGuess: 0, name: '', answer: {} as Sight }
   },
-
-  confetti: void 0,
-
   mounted() {
     myConfetti = confetti.create(this.$refs.confettiCanvas, {
       resize: true,
       useWorker: true,
     })
+    window.$('#sight').autocomplete({
+      source: ChinaSights.map((v) => v.name),
+    })
+    const answerIndex = ~~(ChinaSights.length * Math.random())
+    this.answer = ChinaSights[answerIndex]
+    console.log(this.answer)
   },
-
   methods: {
+    fetchName() {
+      this.name = (this.$refs.nameInput as HTMLInputElement).value
+    },
+
     handleGuess() {
       myConfetti({
         particleCount: 50,
         startVelocity: 20,
         spread: 100,
       })
-    },
 
-    handleInput() {
-      const a = document.createElement('div')
-      a.setAttribute('class', 'autocomplete-items')
-      const dom = this.$refs['myInput'] as HTMLInputElement
-      dom.parentNode!.appendChild(a)
-      let b
-      for (const sight of ChinaSights) {
-        if (sight.name.includes(dom.value)) {
-          b = document.createElement('div')
-          b.innerHTML = sight.name
-          a.appendChild(b)
+      let guess: Guess
+
+      this.fetchName()
+      if (this.name === this.answer.name) {
+        guess = createGuess(this.currentGuess++, true, this.name, '0 m', '✔️')
+      } else {
+        console.log('Finding ', this.name)
+        console.log(ChinaSights.find((v) => v.name == this.name))
+
+        const guessLoc = ChinaSights.find(
+          (v) => v.name == this.name.trim()
+        )!.coord
+        const answerLoc = this.answer.coord
+        let dist = geolib.getDistance(guessLoc, answerLoc) // m
+        let unit = 'm'
+        if (dist >= 1000) {
+          dist /= 1000
+          unit = 'km'
         }
+        dist = Math.round(dist)
+
+        const compass = geolib.getCompassDirection(guessLoc, answerLoc)
+
+        guess = createGuess(
+          this.currentGuess++,
+          true,
+          this.name,
+          `${dist} ${unit}`,
+          CompassToArrow[compass]
+        )
       }
+
+      // @ts-ignore
+      this.emitter.emit('MAKE_NEW_GUESS', guess)
     },
   },
 })
@@ -48,14 +76,13 @@ export default defineComponent({
 
 <template>
   <div>
-    <div class="autocomplete mt-2 border-2">
+    <div class="ui-widget mt-2 border-2 p-1">
       <input
-        ref="myInput"
-        @input="handleInput"
-        id="myInput"
-        type="text"
-        name="myCountry"
+        id="sight"
         placeholder="请输入景点..."
+        class="w-full p-1"
+        v-model="name"
+        ref="nameInput"
       />
     </div>
     <button
@@ -68,44 +95,4 @@ export default defineComponent({
   </div>
 </template>
 
-<style scoped>
-.autocomplete {
-  /*the container must be positioned relative:*/
-  position: relative;
-  display: inline-block;
-}
-input {
-  border: 1px solid transparent;
-  background-color: #f1f1f1;
-  padding: 10px;
-  font-size: 16px;
-}
-input[type='text'] {
-  background-color: #f1f1f1;
-  width: 100%;
-}
-.autocomplete-items {
-  position: absolute;
-  border: 1px solid #d4d4d4;
-  border-bottom: none;
-  border-top: none;
-  z-index: 99;
-  top: 100%;
-  left: 0;
-  right: 0;
-}
-.autocomplete-items div {
-  padding: 10px;
-  cursor: pointer;
-  background-color: #fff;
-  border-bottom: 1px solid #d4d4d4;
-}
-.autocomplete-items div:hover {
-  /*when hovering an item:*/
-  background-color: #e9e9e9;
-}
-.autocomplete-active {
-  background-color: DodgerBlue !important;
-  color: #ffffff;
-}
-</style>
+<style scoped></style>

@@ -28,7 +28,10 @@ type ChinaProvinceOrCity =
 
 export interface Sight {
   name: string
-  coord: [number, number] // Lng, Lat
+  coord: {
+    lon: number
+    lat: number
+  }
   belong: ChinaProvinceOrCity
   brief: string
 }
@@ -39,9 +42,13 @@ function makeSight(
   belong: ChinaProvinceOrCity,
   brief: string
 ) {
+  const _coord = coord.split(',').map(parseFloat)
   return {
     name,
-    coord: coord.split(',').map(parseFloat),
+    coord: {
+      lon: _coord[0],
+      lat: _coord[1],
+    },
     belong,
     brief,
   } as Sight
@@ -96,13 +103,8 @@ export const ChinaSights: Sight[] = [
     '贵州省',
     '世界上最大的瀑布群'
   ),
-  
-  makeSight(
-    '秦始皇兵马俑',
-    '109.2851,34.389417',
-    '陕西省',
-    '世界第八大奇迹'
-  ),
+
+  makeSight('秦始皇兵马俑', '109.2851,34.389417', '陕西省', '世界第八大奇迹'),
 
   makeSight(
     '武夷山',
@@ -110,7 +112,6 @@ export const ChinaSights: Sight[] = [
     '福建省',
     '典型的丹霞地貌，《世界遗产名录》'
   ),
-
 
   makeSight(
     '九寨沟',

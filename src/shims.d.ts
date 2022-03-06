@@ -1,2 +1,3 @@
-declare module 'vue3-autocomplete'
+declare module 'jquery'
+declare module 'jquery-ui'
 declare module 'canvas-confetti'

@@ -13,6 +13,8 @@ defineComponent({
     Guesses,
     Footer,
   },
+  mounted() {    
+  }
 })
 </script>
 

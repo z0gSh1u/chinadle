@@ -9,9 +9,9 @@ export default defineComponent({
 </script>
 
 <template>
-  <footer class="flex justify-center text-center text-xs bottom-0">
-    <span
-      >Inspired by
+  <footer class="text-center text-xs bottom-0">
+    <p>
+      Inspired by
       <a
         href="https://www.powerlanguage.co.uk/wordle/"
         target="_blank"
@@ -24,7 +24,14 @@ export default defineComponent({
         target="_blank"
         class="text-cyan-600"
         >Worldle</a
-      ></span
-    >
+      >
+    </p>
+    <p>
+      by
+      <a href="https://zxuuu.tech" target="_blank" class="text-cyan-600"
+        >z0gSh1u</a
+      >
+      @ 2022
+    </p>
   </footer>
 </template>

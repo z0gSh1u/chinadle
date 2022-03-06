@@ -1,3 +1,31 @@
+type Coord = [number, number] // Lng, Lat
+
+export const TotalGuess = 6
+
+export interface Guess {
+  id: number
+  done: boolean
+  name: string
+  distance: string
+  orientation: string
+}
+
+export function createGuess(
+  id: number,
+  done = false,
+  name = '',
+  distance = '',
+  orientation = ''
+) {
+  return {
+    id,
+    done,
+    name,
+    distance,
+    orientation,
+  } as Guess
+}
+
 export type Direction =
   | 'S'
   | 'W'
@@ -16,7 +44,7 @@ export type Direction =
   | 'NNW'
   | 'N'
 
-const DIRECTION_ARROWS: Record<Direction, string> = {
+export const CompassToArrow: Record<Direction, string> = {
   N: '⬆️',
   NNE: '↗️',
   NE: '↗️',
@@ -34,11 +62,10 @@ const DIRECTION_ARROWS: Record<Direction, string> = {
   NW: '↖️',
   NNW: '↖️',
 }
-export function getDirectionEmoji(guess: Guess) {
-  return guess.distance === 0 ? '🎉' : DIRECTION_ARROWS[guess.direction]
-}
+export function getDirectionEmoji(guess: Coord, answer: Coord) {}
 
 const MAX_DISTANCE_ON_EARTH = 20_000_000
+const EARTH_EQUATOR_RADIUS = 6378.137 // km
 
 export function computeProximityPercent(distance: number): number {
   const proximity = Math.max(MAX_DISTANCE_ON_EARTH - distance, 0)
@@ -61,37 +88,4 @@ export function generateSquareCharacters(
   )
 
   return characters
-}
-
-export function formatDistance(
-  distanceInMeters: number,
-  distanceUnit: 'km' | 'miles'
-) {
-  const distanceInKm = distanceInMeters / 1000
-
-  return distanceUnit === 'km'
-    ? `${Math.round(distanceInKm)}km`
-    : `${Math.round(distanceInKm * 0.621371)}mi`
-}
-
-function radians(a: number) {
-  return (a / 180) * Math.PI
-}
-
-const EARTH_EQUATOR_RADIUS = 6378.137 // km
-
-export function calcDistance(loc1: [number, number], loc2: [number, number]) {
-  const [loc1Lng, loc1Lat] = loc1.map(radians)
-  const [loc2Lng, loc2Lat] = loc2.map(radians)
-  const a = loc1Lat - loc2Lat
-  const b = loc1Lng - loc2Lng
-  let s =
-    2 *
-    Math.asin(
-      Math.sqrt(
-        Math.pow(Math.sin(a / 2), 2) +
-          Math.cos(loc1Lat) * Math.cos(loc2Lat) * Math.pow(Math.sin(b / 2), 2)
-      )
-    )
-  return s * EARTH_EQUATOR_RADIUS // km
 }

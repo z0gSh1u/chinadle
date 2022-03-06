@@ -9,11 +9,16 @@
   },
   "dependencies": {
     "canvas-confetti": "^1.5.1",
+    "geolib": "^3.3.3",
+    "jquery": "^3.6.0",
+    "jquery-ui": "^1.13.1",
+    "mitt": "^3.0.0",
     "vue": "^3.2.25",
     "vue-autosuggest": "^2.2.0",
     "vue3-autocomplete": "^1.0.4"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.14",
     "@vitejs/plugin-vue": "^2.2.0",
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.7",
