@@ -1,11 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-export default defineComponent({
-  data() {
-    return {}
-  },
-})
+export default defineComponent({})
 </script>
 
 <template>

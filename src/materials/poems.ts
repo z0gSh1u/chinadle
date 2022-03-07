@@ -1,3 +1,9 @@
+/**
+ * This is the poems dataset for CHINADLE.
+ *
+ * https://github.com/z0gSh1u/chinadle
+ */
+
 export const Poems = [
   '江南好，风景旧曾谙。', 
   '江山如此多娇，引无数英雄竞折腰。',

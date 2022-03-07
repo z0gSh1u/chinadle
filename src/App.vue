@@ -13,17 +13,20 @@ defineComponent({
     Guesses,
     Footer,
   },
-  mounted() {    
-  }
+  mounted() {},
 })
 </script>
 
 <template>
-  <div class="w-fit justify-center my-0 mx-auto h-full max-h-full min-h-full overflow-y-hidden mt-4 mb-4">
-    <Banner class="w-full max-w-lg"></Banner>
-    <Guesses class="w-full max-w-lg"></Guesses>
-    <SightInput class="w-full max-w-lg"></SightInput>
-    <Footer class="w-full max-w-lg"></Footer>
+  <div
+    class="flex flex-col h-screen w-fit justify-center overflow-y-hidden mx-auto"
+  >
+    <Banner class="w-full max-w-lg mt-4"></Banner>
+    <div class="flex-grow w-full max-w-lg">
+      <Guesses></Guesses>
+      <SightInput></SightInput>
+    </div>
+    <Footer class="w-full max-w-lg mb-4"></Footer>
   </div>
 </template>
 

@@ -1,10 +1,10 @@
 {
   "name": "chinadle",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "dev-host": "vite --host",
+    "build": "set NODE_ENV=production && vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -15,7 +15,7 @@
     "mitt": "^3.0.0",
     "vue": "^3.2.25",
     "vue-autosuggest": "^2.2.0",
-    "vue3-autocomplete": "^1.0.4"
+    "vue-toast-notification": "^3.0.0"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.14",

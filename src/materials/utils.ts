@@ -1,4 +1,5 @@
-type Coord = [number, number] // Lng, Lat
+import { getCompassDirection } from 'geolib'
+import { Sight } from './sights'
 
 export const TotalGuess = 6
 
@@ -26,24 +27,7 @@ export function createGuess(
   } as Guess
 }
 
-export type Direction =
-  | 'S'
-  | 'W'
-  | 'NNE'
-  | 'NE'
-  | 'ENE'
-  | 'E'
-  | 'ESE'
-  | 'SE'
-  | 'SSE'
-  | 'SSW'
-  | 'SW'
-  | 'WSW'
-  | 'WNW'
-  | 'NW'
-  | 'NNW'
-  | 'N'
-
+type Direction = ReturnType<typeof getCompassDirection>
 export const CompassToArrow: Record<Direction, string> = {
   N: '⬆️',
   NNE: '↗️',
@@ -62,30 +46,29 @@ export const CompassToArrow: Record<Direction, string> = {
   NW: '↖️',
   NNW: '↖️',
 }
-export function getDirectionEmoji(guess: Coord, answer: Coord) {}
 
-const MAX_DISTANCE_ON_EARTH = 20_000_000
-const EARTH_EQUATOR_RADIUS = 6378.137 // km
-
-export function computeProximityPercent(distance: number): number {
-  const proximity = Math.max(MAX_DISTANCE_ON_EARTH - distance, 0)
-  return Math.round((proximity / MAX_DISTANCE_ON_EARTH) * 100)
+export function buildToastHTML(sight: Sight) {
+  return `
+    <b style="font-size: 1.5em">${sight.name}</b><br>
+    <i>@ ${sight.belong}</i>
+    <p>${sight.brief}</p>
+  `
 }
 
-export function generateSquareCharacters(
-  proximity: number,
-  theme: 'light' | 'dark'
-): string[] {
-  const characters = new Array<string>(5)
-  const greenSquareCount = Math.floor(proximity / 20)
-  const yellowSquareCount = proximity - greenSquareCount * 20 >= 10 ? 1 : 0
-
-  characters.fill('🟩', 0, greenSquareCount)
-  characters.fill('🟨', greenSquareCount, greenSquareCount + yellowSquareCount)
-  characters.fill(
-    theme === 'light' ? '⬜' : '⬛',
-    greenSquareCount + yellowSquareCount
-  )
-
-  return characters
+export function buildDispBlocks(distanceKm: number) {
+  if (distanceKm <= 1) {
+    // eps
+    return ['🟩', '🟩', '🟩', '🟩', '🟩']
+  }
+  // Max Distance on China is about 4000km
+  if (distanceKm < 500) {
+    return ['🟩', '🟩', '🟩', '🟩', '🟨']
+  } else if (distanceKm < 1000) {
+    return ['🟩', '🟩', '🟩', '🟨', '⬜']
+  } else if (distanceKm < 2000) {
+    return ['🟩', '🟩', '🟨', '⬜', '⬜']
+  } else if (distanceKm < 3000) {
+    return ['🟩', '🟨', '⬜', '⬜', '⬜']
+  }
+  return ['🟨', '⬜', '⬜', '⬜', '⬜']
 }

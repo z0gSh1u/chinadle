@@ -1,11 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-export default defineComponent({
-  data() {
-    return {}
-  },
-})
+export default defineComponent({})
 </script>
 
 <template>
@@ -31,7 +27,9 @@ export default defineComponent({
       <a href="https://zxuuu.tech" target="_blank" class="text-cyan-600"
         >z0gSh1u</a
       >
-      @ 2022
+      @ 2022. Go <a href="https://github.com/z0gSh1u/chinadle" target="_blank" class="text-cyan-600"
+        >GitHub</a
+      > to contribute.
     </p>
   </footer>
 </template>

@@ -2,7 +2,12 @@
 import { defineComponent } from 'vue'
 import Guess from './Guess.vue'
 import { Poems } from '../materials/poems'
-import { createGuess, Guess as GuessType, TotalGuess } from '../materials/utils'
+import {
+  buildDispBlocks,
+  createGuess,
+  Guess as GuessType,
+  TotalGuess,
+} from '../materials/utils'
 
 export default defineComponent({
   data() {
@@ -16,21 +21,13 @@ export default defineComponent({
     this.poem = Poems[~~(Math.random() * Poems.length)]
     this.guesses = Array.from(Array(TotalGuess).fill(0), (_, id) =>
       createGuess(id)
-    )!
-    
-    // @ts-ignore
-    this.emitter.on('MAKE_NEW_GUESS', (payload: GuessType) => {
-      this.updateGuess(payload)
+    )
+    this.emitter.on('MAKE_NEW_GUESS', (payload: unknown) => {
+      const { guess, dist } = payload as { guess: GuessType; dist: number }
+      this.updateGuess(guess)
+      const animStrings = buildDispBlocks(dist / 1000)
+      this.emitter.emit('PLAY_ANIMATION', { id: guess.id, disp: animStrings })
     })
-  },
-  watch: {
-    guesses: {
-      handler(guess) {
-        console.log('checked')
-        this.guesses[guess.id] = { ...guess }
-      },
-      deep: true,
-    },
   },
   methods: {
     updateGuess(guess: GuessType) {
@@ -44,10 +41,10 @@ export default defineComponent({
   <div>
     <p class="text-base my-2">{{ poem }}</p>
     <Guess
-      v-for="guess in guesses"
+      v-for="(guess, index) in guesses"
       :key="guess.id"
-      :guess="guesses[guess.id]"
-      v-model="guesses[guess.id]"
+      :id="guess.id"
+      :value="guesses[index]"
     ></Guess>
   </div>
 </template>

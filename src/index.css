@@ -11,3 +11,13 @@ html, body, #app {
   height: 100vh;
   overflow: hidden;
 }
+
+.v-toast__item {
+  min-height: 3em !important;
+  font-size: 14px;
+  width: 80%;
+}
+
+.v-toast__text {
+  padding: 0.5em !important;
+}
