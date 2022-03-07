@@ -6,7 +6,7 @@ CHINADLE is inspired by [Wordle](https://www.powerlanguage.co.uk/wordle/) and [W
 
 ## PLAY
 
-Go > [CHINADLE](https://zxuuu.tech/CHINADLE)
+Go > [CHINADLE](https://zxuuu.tech/chinadle)
 
 ## Contribute
 
